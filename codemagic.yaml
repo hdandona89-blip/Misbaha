@@ -1,14 +1,27 @@
 workflows:
   ons-android-release:
-    name: Ons Android Release
+    name: ابني تطبيق أُنس
     instance_type: mac_mini_m1
+    max_build_duration: 60
     environment:
       flutter: stable
     scripts:
-      - name: 1. وريني ايه اللي جوة Misbaha
+      - name: 1. وريني ايه اللي جوة
         script: |
-          pwd
           ls -la
-      - name: 2. دور على pubspec.yaml
+      - name: 2. ادخل فولدر أُنس
         script: |
-          find . -name "pubspec.yaml"
+          cd "أُنس"
+      - name: 3. نزل الباكدجات
+        script: |
+          flutter clean
+          flutter pub get
+      - name: 4. ابني ال apk باسم أُنس
+        script: |
+          flutter build apk --split-per-abi --release --target-platform=android-arm,android-arm64
+    artifacts:
+      - "أُنس/build/app/outputs/flutter-apk/*.apk"
+    publishing:
+      email:
+        recipients:
+          - your-email@gmail.com
