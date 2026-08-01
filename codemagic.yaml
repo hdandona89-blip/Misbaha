@@ -1,0 +1,14 @@
+workflows:
+  ons-android-release:
+    name: Ons Android Release
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+    scripts:
+      - name: 1. وريني ايه اللي جوة Misbaha
+        script: |
+          pwd
+          ls -la
+      - name: 2. دور على pubspec.yaml
+        script: |
+          find . -name "pubspec.yaml"
