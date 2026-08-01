@@ -1,0 +1,2102 @@
+name: ons
+description: تطبيق أُنس للأذكار والمسبحة ومواقيت الصلاة
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # الخطوط العربية
+  google_fonts: ^6.2.1
+
+  # حفظ البيانات
+  shared_preferences: ^2.2.3
+
+  # تحديد الموقع
+  geolocator: ^12.0.0
+
+  # مواقيت الصلاة
+  adhan: ^2.0.0
+
+  # الإشعارات
+  flutter_local_notifications: ^17.2.1
+
+  # المنطقة الزمنية
+  timezone: ^0.9.4
+
+  # مشاركة التطبيق
+  share_plus: ^9.0.0
+
+  # الاهتزاز
+  vibration: ^2.0.0
+
+  cupertino_icons: ^1.0.8
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/data/
+lib/
+
+├── main.dart
+
+├── screens/
+│   ├── splash_screen.dart
+│   ├── home_screen.dart
+│   ├── tasbeeh_screen.dart
+│   ├── azkar_screen.dart
+│   ├── prayer_screen.dart
+│   └── duas_screen.dart
+
+├── widgets/
+│   ├── menu_card.dart
+│   └── tasbeeh_button.dart
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'screens/splash_screen.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(const OnsApp());
+}
+
+
+class OnsApp extends StatelessWidget {
+
+  const OnsApp({super.key});
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    return MaterialApp(
+
+      debugShowCheckedModeBanner: false,
+
+      title: "أُنس",
+
+      theme: ThemeData(
+
+        scaffoldBackgroundColor:
+        const Color(0xffF7F5EF),
+
+
+        primaryColor:
+        const Color(0xff0B6E4F),
+
+
+        textTheme:
+        GoogleFonts.cairoTextTheme(),
+
+        appBarTheme: const AppBarTheme(
+
+          backgroundColor:
+          Color(0xff0B6E4F),
+
+          centerTitle: true,
+
+          elevation: 0,
+
+        ),
+
+      ),
+
+
+      home: const SplashScreen(),
+
+    );
+
+  }
+}
+lib/screens/splash_screen.dart
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'home_screen.dart';
+
+
+
+class SplashScreen extends StatefulWidget {
+
+  const SplashScreen({super.key});
+
+
+  @override
+  State<SplashScreen> createState()
+  => _SplashScreenState();
+
+}
+
+
+
+class _SplashScreenState
+extends State<SplashScreen>{
+
+
+@override
+void initState(){
+
+super.initState();
+
+
+Timer(
+
+const Duration(seconds:3),
+
+(){
+
+Navigator.pushReplacement(
+
+context,
+
+MaterialPageRoute(
+
+builder: (_) =>
+const HomeScreen(),
+
+),
+
+);
+
+},
+
+);
+
+}
+
+
+
+@override
+Widget build(BuildContext context){
+
+return Scaffold(
+
+body: Container(
+
+decoration:
+const BoxDecoration(
+
+gradient: LinearGradient(
+
+colors:[
+
+Color(0xff0B6E4F),
+
+Color(0xffD4AF37),
+
+],
+
+begin:
+Alignment.topCenter,
+
+end:
+Alignment.bottomCenter,
+
+),
+
+),
+
+
+child: Center(
+
+child: Column(
+
+mainAxisAlignment:
+MainAxisAlignment.center,
+
+children:[
+
+
+const Icon(
+
+Icons.auto_awesome,
+
+size:90,
+
+color:Colors.white,
+
+),
+
+
+const SizedBox(height:25),
+
+
+Text(
+
+"أُنس",
+
+style:
+GoogleFonts.cairo(
+
+fontSize:45,
+
+fontWeight:
+FontWeight.bold,
+
+color:
+Colors.white,
+
+),
+
+),
+
+
+const SizedBox(height:15),
+
+
+
+Text(
+
+"﴿ ألا بذكر الله تطمئن القلوب ﴾",
+
+textAlign:
+TextAlign.center,
+
+style:
+GoogleFonts.cairo(
+
+fontSize:20,
+
+color:
+Colors.white,
+
+),
+
+),
+
+
+
+const SizedBox(height:40),
+
+
+
+Text(
+
+"تطوير: دينا حسن",
+
+style:
+GoogleFonts.cairo(
+
+fontSize:16,
+
+color:
+Colors.white,
+
+),
+
+),
+
+
+],
+
+
+),
+
+),
+
+
+),
+
+);
+
+}
+
+
+}
+lib/screens/home_screen.dart
+import 'package:flutter/material.dart';
+import '../widgets/menu_card.dart';
+
+import 'tasbeeh_screen.dart';
+import 'azkar_screen.dart';
+import 'prayer_screen.dart';
+import 'duas_screen.dart';
+
+
+
+class HomeScreen extends StatelessWidget {
+
+  const HomeScreen({super.key});
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+
+      appBar: AppBar(
+
+        title: const Text("أُنس"),
+
+      ),
+
+
+      body: Padding(
+
+        padding: const EdgeInsets.all(16),
+
+        child: GridView.count(
+
+          crossAxisCount: 2,
+
+          crossAxisSpacing: 15,
+
+          mainAxisSpacing: 15,
+
+
+          children: [
+
+
+            MenuCard(
+
+              title: "المسبحة",
+
+              icon: Icons.circle,
+
+              color: const Color(0xff0B6E4F),
+
+              onTap: (){
+
+                Navigator.push(
+
+                  context,
+
+                  MaterialPageRoute(
+
+                    builder: (_) =>
+                    const TasbeehScreen(),
+
+                  ),
+
+                );
+
+              },
+
+            ),
+
+
+
+            MenuCard(
+
+              title: "الأذكار",
+
+              icon: Icons.menu_book,
+
+              color: const Color(0xffC49A2C),
+
+              onTap: (){
+
+                Navigator.push(
+
+                  context,
+
+                  MaterialPageRoute(
+
+                    builder: (_) =>
+                    const AzkarScreen(),
+
+                  ),
+
+                );
+
+              },
+
+            ),
+
+
+
+            MenuCard(
+
+              title: "مواقيت الصلاة",
+
+              icon: Icons.mosque,
+
+              color: const Color(0xff1976D2),
+
+              onTap: (){
+
+                Navigator.push(
+
+                  context,
+
+                  MaterialPageRoute(
+
+                    builder: (_) =>
+                    const PrayerScreen(),
+
+                  ),
+
+                );
+
+              },
+
+            ),
+
+
+
+            MenuCard(
+
+              title: "الأدعية",
+
+              icon: Icons.favorite,
+
+              color: const Color(0xff8E44AD),
+
+              onTap: (){
+
+                Navigator.push(
+
+                  context,
+
+                  MaterialPageRoute(
+
+                    builder: (_) =>
+                    const DuasScreen(),
+
+                  ),
+
+                );
+
+              },
+
+            ),
+
+
+
+          ],
+
+
+        ),
+
+      ),
+
+    );
+
+  }
+
+}
+lib/widgets/menu_card.dart
+
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+
+
+class MenuCard extends StatelessWidget {
+
+
+final String title;
+
+final IconData icon;
+
+final Color color;
+
+final VoidCallback onTap;
+
+
+
+const MenuCard({
+
+super.key,
+
+required this.title,
+
+required this.icon,
+
+required this.color,
+
+required this.onTap,
+
+});
+
+
+
+@override
+Widget build(BuildContext context) {
+
+
+return InkWell(
+
+onTap: onTap,
+
+
+borderRadius:
+BorderRadius.circular(25),
+
+
+child: Container(
+
+
+decoration:
+
+BoxDecoration(
+
+color: Colors.white,
+
+borderRadius:
+BorderRadius.circular(25),
+
+
+boxShadow:[
+
+BoxShadow(
+
+color:
+Colors.black.withOpacity(.08),
+
+blurRadius:10,
+
+offset:
+const Offset(0,5),
+
+)
+
+]
+
+
+),
+
+
+child: Column(
+
+mainAxisAlignment:
+MainAxisAlignment.center,
+
+
+children:[
+
+
+Container(
+
+padding:
+const EdgeInsets.all(18),
+
+decoration:
+
+BoxDecoration(
+
+shape:
+BoxShape.circle,
+
+color:
+color.withOpacity(.15),
+
+),
+
+
+child:
+
+Icon(
+
+icon,
+
+size:45,
+
+color:color,
+
+),
+
+),
+
+
+
+const SizedBox(height:15),
+
+
+
+Text(
+
+title,
+
+style:
+GoogleFonts.cairo(
+
+fontSize:20,
+
+fontWeight:
+FontWeight.bold,
+
+),
+
+),
+
+
+
+],
+
+
+),
+
+
+),
+
+
+);
+
+
+}
+
+
+}
+shared_preferences: ^2.2.3
+vibration: ^2.0.0
+flutter pub get
+lib/screens/tasbeeh_screen.dart
+
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vibration/vibration.dart';
+
+
+class TasbeehScreen extends StatefulWidget {
+
+  const TasbeehScreen({super.key});
+
+  @override
+  State<TasbeehScreen> createState() =>
+      _TasbeehScreenState();
+
+}
+
+
+
+class _TasbeehScreenState extends State<TasbeehScreen>{
+
+
+int count = 0;
+
+
+int zekrIndex = 0;
+
+
+
+final List<String> azkar = [
+
+"سبحان الله",
+
+"الحمد لله",
+
+"لا إله إلا الله",
+
+"الله أكبر",
+
+"اللهم صل وسلم على نبينا محمد",
+
+"اللهم انصر أهلنا في غزة"
+
+];
+
+
+
+@override
+void initState(){
+
+super.initState();
+
+loadCount();
+
+}
+
+
+
+Future<void> loadCount() async{
+
+final prefs =
+await SharedPreferences.getInstance();
+
+
+setState((){
+
+count =
+prefs.getInt("tasbeeh_count") ?? 0;
+
+});
+
+}
+
+
+
+Future<void> saveCount() async{
+
+final prefs =
+await SharedPreferences.getInstance();
+
+
+await prefs.setInt(
+"tasbeeh_count",
+count
+);
+
+}
+
+
+
+
+
+void tasbeeh(){
+
+
+setState((){
+
+count++;
+
+});
+
+
+saveCount();
+
+
+
+Vibration.vibrate(
+duration:40
+);
+
+
+
+if(count % 100 == 0){
+
+ScaffoldMessenger.of(context)
+.showSnackBar(
+
+SnackBar(
+
+content: Text(
+
+"اللهم بارك، أتممت $count ذكر 🌸"
+
+),
+
+duration:
+const Duration(seconds:2),
+
+),
+
+);
+
+}
+
+
+}
+
+
+
+
+
+void reset(){
+
+
+setState((){
+
+count =0;
+
+});
+
+
+saveCount();
+
+
+}
+
+
+
+
+
+void changeZekr(){
+
+
+setState((){
+
+
+zekrIndex++;
+
+
+if(zekrIndex >= azkar.length){
+
+zekrIndex=0;
+
+}
+
+
+count=0;
+
+
+});
+
+
+saveCount();
+
+
+}
+
+
+
+
+@override
+Widget build(BuildContext context){
+
+
+return Scaffold(
+
+
+appBar: AppBar(
+
+title:
+const Text("المسبحة"),
+
+),
+
+
+
+body:
+
+Center(
+
+child:
+
+Column(
+
+mainAxisAlignment:
+MainAxisAlignment.center,
+
+
+children:[
+
+
+
+Text(
+
+azkar[zekrIndex],
+
+style:
+const TextStyle(
+
+fontSize:28,
+
+fontWeight:
+FontWeight.bold,
+
+),
+
+),
+
+
+
+const SizedBox(height:40),
+
+
+
+
+Container(
+
+height:180,
+
+width:180,
+
+
+decoration:
+
+BoxDecoration(
+
+shape:
+BoxShape.circle,
+
+color:
+const Color(0xff0B6E4F),
+
+boxShadow:[
+
+BoxShadow(
+
+blurRadius:20,
+
+color:
+Colors.black.withOpacity(.2)
+
+)
+
+]
+
+),
+
+
+
+child:
+
+Center(
+
+child:
+
+Text(
+
+"$count",
+
+style:
+
+const TextStyle(
+
+fontSize:55,
+
+color:
+Colors.white,
+
+fontWeight:
+FontWeight.bold
+
+),
+
+),
+
+),
+
+),
+
+
+
+const SizedBox(height:40),
+
+
+
+
+GestureDetector(
+
+onTap: tasbeeh,
+
+
+child:
+
+Container(
+
+height:90,
+
+width:90,
+
+
+decoration:
+
+const BoxDecoration(
+
+shape:
+BoxShape.circle,
+
+color:
+Color(0xffD4AF37)
+
+),
+
+
+
+child:
+
+const Icon(
+
+Icons.touch_app,
+
+size:45,
+
+color:
+Colors.white,
+
+),
+
+),
+
+
+),
+
+
+
+
+const SizedBox(height:30),
+
+
+
+
+Row(
+
+mainAxisAlignment:
+MainAxisAlignment.center,
+
+children:[
+
+
+
+ElevatedButton.icon(
+
+onPressed:reset,
+
+icon:
+const Icon(Icons.refresh),
+
+label:
+const Text("تصفير"),
+
+),
+
+
+
+const SizedBox(width:20),
+
+
+
+
+ElevatedButton.icon(
+
+onPressed:changeZekr,
+
+icon:
+const Icon(Icons.swap_horiz),
+
+label:
+const Text("تبديل الذكر"),
+
+),
+
+
+
+],
+
+
+),
+
+
+
+],
+
+
+),
+
+
+),
+
+
+);
+
+
+}
+
+
+}
+lib/models/zekr_model.dart
+class ZekrModel {
+
+  final String text;
+  final String count;
+  final String reference;
+
+
+  ZekrModel({
+
+    required this.text,
+
+    required this.count,
+
+    required this.reference,
+
+  });
+
+}
+lib/data/morning_azkar.dart
+
+import '../models/zekr_model.dart';
+
+
+
+List<ZekrModel> morningAzkar = [
+
+
+ZekrModel(
+
+text:
+
+"أَعُوذُ بِاللَّهِ مِنَ الشَّيطَانِ الرَّجِيمِ\n\n"
+"بِسْمِ اللهِ الرَّحْمنِ الرَّحِيمِ\n"
+"اللَّهُ لاَ إِلَهَ إِلاَّ هُوَ الْحَيُّ الْقَيُّومُ "
+"لاَ تَأْخُذُهُ سِنَةٌ وَلاَ نَوْمٌ "
+"لَّهُ مَا فِي السَّمَوَاتِ وَمَا فِي الأَرْضِ "
+"مَن ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلاَّ بِإِذْنِهِ "
+"يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ "
+"وَلاَ يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلاَّ بِمَا شَاء "
+"وَسِعَ كُرْسِيُّهُ السَّمَوَاتِ وَالأَرْضَ "
+"وَلاَ يَؤُودُهُ حِفْظُهُمَا "
+"وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+
+count:
+
+"مرة واحدة",
+
+reference:
+
+"صحيح، أخرجه الحاكم"
+
+),
+
+
+
+ZekrModel(
+
+text:
+
+"قُلْ هُوَ اللَّهُ أَحَدٌ ۞ اللَّهُ الصَّمَدُ ۞ "
+"لَمْ يَلِدْ وَلَمْ يُولَدْ ۞ "
+"وَلَمْ يَكُن لَّهُ كُفُواً أَحَد",
+
+count:
+
+"3 مرات",
+
+reference:
+
+"صحيح الترمذي"
+
+),
+
+
+
+ZekrModel(
+
+text:
+
+"قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۞ "
+"مِن شَرِّ مَا خَلَقَ ۞ "
+"وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ۞ "
+"وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۞ "
+"وَمِن شَرِّ حَاسِدٍ إِذَا حَسَد",
+
+count:
+
+"3 مرات",
+
+reference:
+
+"صحيح الترمذي"
+
+),
+
+
+
+ZekrModel(
+
+text:
+
+"قُلْ أَعُوذُ بِرَبِّ النَّاسِ ۞ "
+"مَلِكِ النَّاسِ ۞ "
+"إِلَهِ النَّاسِ ۞ "
+"مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ",
+
+count:
+
+"3 مرات",
+
+reference:
+
+"صحيح الترمذي"
+
+),
+
+
+];
+lib/data/morning_azkar.dart
+ZekrModel(
+
+text:
+"لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، "
+"وهو على كل شيء قدير",
+
+count:
+"100 مرة",
+
+reference:
+"متفق عليه"
+
+),
+
+
+ZekrModel(
+
+text:
+"أستغفر الله وأتوب إليه",
+
+count:
+"100 مرة",
+
+reference:
+"متفق عليه"
+
+),
+
+
+ZekrModel(
+
+text:
+"سبحان الله وبحمده",
+
+count:
+"100 مرة",
+
+reference:
+"صحيح مسلم"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلاَّ أَنْتَ، "
+"خَلَقْتَنِي وَأَنَا عَبْدُكَ، "
+"وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، "
+"أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، "
+"أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، "
+"وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي، "
+"فَإِنَّهُ لاَ يَغْفِرُ الذُّنوبَ إِلاَّ أَنْت",
+
+count:
+"مرة واحدة",
+
+reference:
+"صحيح البخاري"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، "
+"وَالْحَمْدُ لِلَّهِ، "
+"لاَ إِلَهَ إلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ، "
+"لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ "
+"وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+
+count:
+"مرة واحدة",
+
+reference:
+"صحيح مسلم"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"سبحان الله وبحمده: عدد خلقه، ورضا نفسه، "
+"وزنة عرشه، ومداد كلماته",
+
+count:
+"3 مرات",
+
+reference:
+"صحيح مسلم"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"بسم الله الذي لا يضر مع اسمه شيء في الأرض "
+"ولا في السماء وهو السميع العليم",
+
+count:
+"3 مرات",
+
+reference:
+"صحيح، أخرجه أبو داود"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"رضيت بالله رباً، وبالإسلام ديناً، "
+"وبمحمد صلى الله عليه وسلم نبياً",
+
+count:
+"3 مرات",
+
+reference:
+"صحيح، أخرجه النسائي"
+
+),
+lib/data/morning_azkar.dart
+ZekrModel(
+
+text:
+"اللهم عافني في بدني، اللهم عافني في سمعي، "
+"اللهم عافني في بصري، لا إله إلا أنت. "
+"اللهم إني أعوذ بك من الكفر والفقر، "
+"وأعوذ بك من عذاب القبر، لا إله إلا أنت",
+
+count:
+"3 مرات",
+
+reference:
+"حسن، البخاري في الأدب المفرد"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"اللهم صل على محمد وعلى آل محمد كما صليت على إبراهيم "
+"وعلى آل إبراهيم إنك حميد مجيد، "
+"اللهم بارك على محمد وعلى آل محمد كما باركت على إبراهيم "
+"وعلى آل إبراهيم إنك حميد مجيد",
+
+count:
+"10 مرات",
+
+reference:
+"صحيح، أخرجه الطبراني"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، "
+"اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ "
+"فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، "
+"اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي، "
+"اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي "
+"وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي",
+
+count:
+"مرة واحدة",
+
+reference:
+"صحيح، البخاري الأدب المفرد"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"اللهم عالم الغيب والشهادة، فاطر السماوات والأرض، "
+"رب كل شيء ومليكه، أشهد أن لا إله إلا أنت، "
+"أعوذ بك من شر نفسي ومن شر الشيطان وشركه، "
+"وأن أقترف على نفسي سوءاً أو أجره إلى مسلم",
+
+count:
+"مرة واحدة",
+
+reference:
+"صحيح الترمذي"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"يا حي يا قيوم برحمتك أستغيث، "
+"أصلح لي شأني كله، ولا تكلني إلى نفسي طرفة عين",
+
+count:
+"مرة واحدة",
+
+reference:
+"صحيح، أخرجه الحاكم"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، "
+"وَرِزْقًا طَيِّبًا، وَعَمَلًا مُتَقَبَّلًا",
+
+count:
+"مرة واحدة",
+
+reference:
+"صحيح، أخرجه ابن السني"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، "
+"وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُور",
+
+count:
+"مرة واحدة",
+
+reference:
+"صحيح الترمذي"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"أصبحنا على فطرة الإسلام وكلمة الإخلاص "
+"ودين نبينا محمد ﷺ وملة أبينا إبراهيم حنيفاً مسلماً "
+"وما كان من المشركين",
+
+count:
+"مرة واحدة",
+
+reference:
+"صححه الألباني - مسند أحمد"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"اللَّهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ "
+"أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ "
+"لاَ شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
+
+count:
+"مرة واحدة",
+
+reference:
+"حسن، أخرجه أبو داود"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"أصبحنا وأصبح الملك لله رب العالمين، "
+"اللهم إني أسألك خير هذا اليوم فتحه ونصره ونوره "
+"وبركته وهداه، وأعوذ بك من شر ما فيه وشر ما بعده",
+
+count:
+"مرة واحدة",
+
+reference:
+"حسن، أخرجه أبو داود"
+
+),
+
+
+
+ZekrModel(
+
+text:
+"حسبي الله لا إله إلا هو عليه توكلت "
+"وهو رب العرش العظيم",
+
+count:
+"7 مرات",
+
+reference:
+"صحيح، أخرجه ابن السني"
+
+),
+
+];
+lib/data/evening_azkar.dart
+
+import '../models/zekr_model.dart';
+import 'morning_azkar.dart';
+
+
+
+List<ZekrModel> eveningAzkar = morningAzkar.map((zekr) {
+
+  return ZekrModel(
+
+    text: zekr.text
+
+        .replaceAll(
+        "أصبحنا",
+        "أمسينا"
+        )
+
+        .replaceAll(
+        "أصبح",
+        "أمسى"
+        )
+
+        .replaceAll(
+        "أَصْبَحْنَا",
+        "أَمْسَيْنَا"
+        )
+
+        .replaceAll(
+        "أَصْبَحَ",
+        "أَمْسَى"
+        )
+
+        .replaceAll(
+        "أصبحت",
+        "أمسيت"
+        )
+
+        .replaceAll(
+        "اللَّهُمَّ بِكَ أَصْبَحْنَا",
+        "اللَّهُمَّ بِكَ أَمْسَيْنَا"
+        ),
+
+
+    count: zekr.count,
+
+    reference: zekr.reference,
+
+  );
+
+}).toList();
+lib/screens/azkar_screen.dart
+import 'package:flutter/material.dart';
+
+import '../data/morning_azkar.dart';
+import '../data/evening_azkar.dart';
+
+import '../widgets/zekr_card.dart';
+
+
+
+class AzkarScreen extends StatefulWidget {
+
+  const AzkarScreen({super.key});
+
+
+  @override
+  State<AzkarScreen> createState()
+  => _AzkarScreenState();
+
+}
+
+
+
+class _AzkarScreenState
+extends State<AzkarScreen>{
+
+
+bool morning = true;
+
+
+
+@override
+Widget build(BuildContext context){
+
+
+final list = morning
+    ? morningAzkar
+    : eveningAzkar;
+
+
+
+return Scaffold(
+
+
+appBar:
+
+AppBar(
+
+title:
+const Text("الأذكار"),
+
+),
+
+
+
+body:
+
+Column(
+
+children:[
+
+
+
+const SizedBox(height:10),
+
+
+
+Row(
+
+mainAxisAlignment:
+MainAxisAlignment.center,
+
+children:[
+
+
+
+ChoiceChip(
+
+label:
+const Text("أذكار الصباح"),
+
+selected:
+morning,
+
+onSelected:(v){
+
+setState((){
+
+morning=true;
+
+});
+
+},
+
+),
+
+
+
+const SizedBox(width:15),
+
+
+
+ChoiceChip(
+
+label:
+const Text("أذكار المساء"),
+
+selected:
+!morning,
+
+onSelected:(v){
+
+setState((){
+
+morning=false;
+
+});
+
+},
+
+),
+
+
+
+],
+
+
+),
+
+
+
+
+Expanded(
+
+child:
+
+ListView.builder(
+
+
+padding:
+const EdgeInsets.all(12),
+
+
+itemCount:
+list.length,
+
+
+itemBuilder:
+(context,index){
+
+
+return ZekrCard(
+
+zekr:list[index],
+
+);
+
+
+},
+
+
+),
+
+
+),
+
+
+
+],
+
+
+),
+
+
+);
+
+
+}
+
+}
+lib/widgets/zekr_card.dart
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../models/zekr_model.dart';
+
+
+
+class ZekrCard extends StatelessWidget {
+
+
+final ZekrModel zekr;
+
+
+const ZekrCard({
+
+super.key,
+
+required this.zekr,
+
+});
+
+
+
+@override
+Widget build(BuildContext context){
+
+
+return Card(
+
+margin:
+const EdgeInsets.only(bottom:15),
+
+
+shape:
+
+RoundedRectangleBorder(
+
+borderRadius:
+BorderRadius.circular(20)
+
+),
+
+
+child:
+
+Padding(
+
+padding:
+const EdgeInsets.all(16),
+
+
+child:
+
+Column(
+
+crossAxisAlignment:
+CrossAxisAlignment.end,
+
+
+children:[
+
+
+
+Text(
+
+zekr.text,
+
+textAlign:
+TextAlign.right,
+
+style:
+const TextStyle(
+
+fontSize:18,
+
+height:1.8,
+
+),
+
+),
+
+
+
+const SizedBox(height:10),
+
+
+
+Text(
+
+"🔁 ${zekr.count}",
+
+style:
+const TextStyle(
+
+color:
+Colors.green,
+
+fontWeight:
+FontWeight.bold,
+
+),
+
+),
+
+
+
+Text(
+
+zekr.reference,
+
+style:
+const TextStyle(
+
+color:
+Colors.grey,
+
+),
+
+),
+
+
+
+Align(
+
+alignment:
+Alignment.centerLeft,
+
+
+child:
+
+IconButton(
+
+icon:
+const Icon(Icons.copy),
+
+
+onPressed:(){
+
+
+Clipboard.setData(
+
+ClipboardData(
+
+text:
+zekr.text
+
+)
+
+);
+
+
+ScaffoldMessenger.of(context)
+.showSnackBar(
+
+const SnackBar(
+
+content:
+Text("تم نسخ الذكر")
+
+),
+
+);
+
+
+},
+
+),
+
+),
+
+
+
+],
+
+
+),
+
+
+),
+
+
+);
+
+
+}
+
+}
+lib/services/prayer_service.dart
+import 'package:adhan/adhan.dart';
+
+
+
+class PrayerService {
+
+
+
+static PrayerTimes getPrayerTimes({
+
+double latitude = 30.0444,
+
+double longitude = 31.2357,
+
+}) {
+
+
+
+final coordinates = Coordinates(
+
+latitude,
+
+longitude,
+
+);
+
+
+
+final params = CalculationMethod.egyptian.getParameters();
+
+
+params.madhab = Madhab.shafi;
+
+
+
+final date = DateComponents.from(
+
+DateTime.now(),
+
+);
+
+
+
+return PrayerTimes.today(
+
+coordinates,
+
+params,
+
+);
+
+
+}
+
+
+
+}
+lib/services/location_service.dart
+import 'package:geolocator/geolocator.dart';
+
+
+
+class LocationService {
+
+
+
+static Future<Position?> getLocation() async {
+
+
+
+bool enabled =
+await Geolocator.isLocationServiceEnabled();
+
+
+
+if(!enabled){
+
+return null;
+
+}
+
+
+
+LocationPermission permission =
+await Geolocator.checkPermission();
+
+
+
+if(permission ==
+LocationPermission.denied){
+
+
+permission =
+await Geolocator.requestPermission();
+
+
+}
+
+
+
+if(permission ==
+LocationPermission.deniedForever){
+
+return null;
+
+}
+
+
+
+return await Geolocator.getCurrentPosition();
+
+
+
+}
+
+
+
+}
+lib/screens/prayer_screen.dart
+import 'package:flutter/material.dart';
+
+import '../services/prayer_service.dart';
+import '../services/location_service.dart';
+
+import 'package:adhan/adhan.dart';
+
+
+
+class PrayerScreen extends StatefulWidget {
+
+
+const PrayerScreen({super.key});
+
+
+
+@override
+State<PrayerScreen> createState()
+=> _PrayerScreenState();
+
+
+}
+
+
+
+class _Prayer
