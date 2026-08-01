@@ -1,0 +1,16 @@
+import '../models/zekr_model.dart';
+import 'morning_azkar.dart';
+
+List<ZekrModel> eveningAzkar = morningAzkar.map((zekr) {
+  return ZekrModel(
+    text: zekr.text
+        .replaceAll("أصبحنا", "أمسينا")
+        .replaceAll("أصبح", "أمسى")
+        .replaceAll("أَصْبَحْنَا", "أَمْسَيْنَا")
+        .replaceAll("أَصْبَحَ", "أَمْسَى")
+        .replaceAll("أصبحت", "أمسيت")
+        .replaceAll("اللَّهُمَّ بِكَ أَصْبَحْنَا", "اللَّهُمَّ بِكَ أَمْسَيْنَا"),
+    count: zekr.count,
+    reference: zekr.reference,
+  );
+}).toList();
