@@ -1,27 +1,20 @@
 workflows:
   ons-android-release:
-    name: ابني تطبيق أُنس
+    name: Build Ons App
     instance_type: mac_mini_m1
     max_build_duration: 60
     environment:
       flutter: stable
     scripts:
-      - name: 1. وريني ايه اللي جوة
+      - name: 1. Enter ons folder
         script: |
-          ls -la
-      - name: 2. ادخل فولدر أُنس
-        script: |
-          cd "أُنس"
-      - name: 3. نزل الباكدجات
+          cd ons
+      - name: 2. Get packages
         script: |
           flutter clean
           flutter pub get
-      - name: 4. ابني ال apk باسم أُنس
+      - name: 3. Build APK
         script: |
-          flutter build apk --split-per-abi --release --target-platform=android-arm,android-arm64
+          flutter build apk --release --split-per-abi
     artifacts:
-      - "أُنس/build/app/outputs/flutter-apk/*.apk"
-    publishing:
-      email:
-        recipients:
-          - your-email@gmail.com
+      - "ons/build/app/outputs/flutter-apk/*.apk"
