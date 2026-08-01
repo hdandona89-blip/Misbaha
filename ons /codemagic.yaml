@@ -1,0 +1,12 @@
+workflows:
+  ons-android-release:
+    name: Build Ons App
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+    scripts:
+      - cd ons
+      - flutter pub get
+      - flutter build apk --release
+    artifacts:
+      - "ons/build/app/outputs/flutter-apk/*.apk"
