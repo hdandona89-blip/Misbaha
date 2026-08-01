@@ -16,6 +16,7 @@ Misbaha/
             ├── home_screen.dart
             ├── tasbeeh_screen.dart
 
+ons / pubsbect.yami
 name: ons_app
 description: تطبيق أُنس للأذكار والمسبحة ومواقيت الصلاة
 publish_to: "none"
