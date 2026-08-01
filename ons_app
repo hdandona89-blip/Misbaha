@@ -1,0 +1,21 @@
+Misbaha/
+└── ons/
+    ├── pubspec.yaml
+    ├── codemagic.yaml
+    └── lib/
+        ├── main.dart
+        ├── models/zekr_model.dart
+        ├── data/morning_azkar.dart
+        ├── data/evening_azkar.dart
+        ├── services/prayer_service.dart
+        ├── services/location_service.dart
+        ├── widgets/menu_card.dart
+        ├── widgets/zekr_card.dart
+        └── screens/
+            ├── splash_screen.dart
+            ├── home_screen.dart
+            ├── tasbeeh_screen.dart
+            ├── azkar_screen.dart
+            ├── prayer_screen.dart
+            └── duas_screen.dart
+
