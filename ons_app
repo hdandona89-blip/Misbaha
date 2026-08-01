@@ -15,6 +15,31 @@ Misbaha/
             ├── splash_screen.dart
             ├── home_screen.dart
             ├── tasbeeh_screen.dart
+
+name: ons_app
+description: تطبيق أُنس للأذكار والمسبحة ومواقيت الصلاة
+publish_to: "none"
+version: 1.0.0+1
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^6.2.1
+  shared_preferences: ^2.2.3
+  geolocator: ^12.0.0
+  adhan: ^2.0.0
+  flutter_local_notifications: ^17.2.1
+  timezone: ^0.9.4
+  share_plus: ^9.0.0
+  vibration: ^2.0.0
+  cupertino_icons: ^1.0.8
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+flutter:
+  uses-material-design: true
             ├── azkar_screen.dart
             ├── prayer_screen.dart
             └── duas_screen.dart
