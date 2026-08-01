@@ -8,13 +8,18 @@ workflows:
     scripts:
       - name: 1. Enter ons folder
         script: |
+          #!/usr/bin/env bash
           cd ons
       - name: 2. Get packages
         script: |
+          #!/usr/bin/env bash
+          cd ons
           flutter clean
           flutter pub get
       - name: 3. Build APK
         script: |
+          #!/usr/bin/env bash
+          cd ons
           flutter build apk --release --split-per-abi
     artifacts:
       - "ons/build/app/outputs/flutter-apk/*.apk"
